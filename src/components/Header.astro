@@ -1,0 +1,115 @@
+<header class="site-header">
+	<nav aria-label="Site navigation">
+		<button class="theme-toggle" type="button" aria-label="Switch to dark mode">
+			<svg
+				data-icon="sun"
+				aria-hidden="true"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.75"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			>
+				<circle cx="12" cy="12" r="4"></circle>
+				<path
+					d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"
+				></path>
+			</svg>
+			<svg
+				data-icon="moon"
+				aria-hidden="true"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.75"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			>
+				<path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z"></path>
+			</svg>
+		</button>
+	</nav>
+</header>
+
+<script>
+	const toggle = document.querySelector<HTMLButtonElement>('.theme-toggle');
+	const root = document.documentElement;
+	const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+	function currentTheme() {
+		return root.dataset.theme ?? (systemTheme.matches ? 'dark' : 'light');
+	}
+
+	function updateLabel() {
+		toggle?.setAttribute(
+			'aria-label',
+			currentTheme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode',
+		);
+	}
+
+	toggle?.addEventListener('click', () => {
+		root.dataset.theme = currentTheme() === 'dark' ? 'light' : 'dark';
+		updateLabel();
+	});
+
+	systemTheme.addEventListener('change', updateLabel);
+	updateLabel();
+</script>
+
+<style>
+	.site-header {
+		display: flex;
+		justify-content: flex-end;
+		padding: 1rem;
+	}
+
+	.theme-toggle {
+		display: grid;
+		width: 2.75rem;
+		height: 2.75rem;
+		place-items: center;
+		padding: 0;
+		color: inherit;
+		background: transparent;
+		border: 1px solid currentColor;
+		border-radius: 999px;
+		cursor: pointer;
+	}
+
+	.theme-toggle:hover {
+		background: color-mix(in srgb, currentColor 10%, transparent);
+	}
+
+	.theme-toggle:focus-visible {
+		outline: 2px solid currentColor;
+		outline-offset: 3px;
+	}
+
+	.theme-toggle svg {
+		width: 1.25rem;
+		height: 1.25rem;
+	}
+
+	[data-icon='moon'] {
+		display: none;
+	}
+
+	:global(html[data-theme='dark']) [data-icon='sun'] {
+		display: none;
+	}
+
+	:global(html[data-theme='dark']) [data-icon='moon'] {
+		display: block;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:global(html:not([data-theme])) [data-icon='sun'] {
+			display: none;
+		}
+
+		:global(html:not([data-theme])) [data-icon='moon'] {
+			display: block;
+		}
+	}
+</style>
